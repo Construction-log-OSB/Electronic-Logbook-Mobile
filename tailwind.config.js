@@ -4,7 +4,11 @@ const { hairlineWidth, platformSelect } = require('nativewind/theme');
 module.exports = {
   // NOTE: Update this to include the paths to all of your component files.
   darkMode: 'class', // Enable manual toggling of dark mode
-  content: ['./app/**/*.{js,jsx,ts,tsx}', './components/**/*.{js,jsx,ts,tsx}'],
+  content: [
+    './app/**/*.{js,jsx,ts,tsx}',
+    './components/**/*.{js,jsx,ts,tsx}',
+    './src/**/*.{js,jsx,ts,tsx}',
+  ],
   presets: [require('nativewind/preset')],
   theme: {
     extend: {
@@ -42,6 +46,12 @@ module.exports = {
           DEFAULT: withOpacity('card'),
           foreground: withOpacity('card-foreground'),
         },
+        grey1: `rgb(var(--grey1) / <alpha-value>)`,
+        grey2: `rgb(var(--grey2) / <alpha-value>)`,
+        grey3: `rgb(var(--grey3) / <alpha-value>)`,
+        grey4: `rgb(var(--grey4) / <alpha-value>)`,
+        grey5: `rgb(var(--grey5) / <alpha-value>)`,
+        grey6: `rgb(var(--grey6) / <alpha-value>)`,
       },
       borderWidth: {
         hairline: hairlineWidth(),

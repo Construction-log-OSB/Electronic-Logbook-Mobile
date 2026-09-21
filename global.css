@@ -24,6 +24,14 @@
     --input: 210 210 215;
     --ring: 230 230 235;
 
+    /* iOS system grey scale */
+    --grey1: 142 142 147;
+    --grey2: 175 176 180;
+    --grey3: 199 199 204;
+    --grey4: 210 210 215;
+    --grey5: 230 230 235;
+    --grey6: 242 242 247;
+
     --android-background: 249 249 255;
     --android-foreground: 0 0 0;
     --android-card: 255 255 255;
@@ -43,6 +51,14 @@
     --android-border: 215 217 228;
     --android-input: 210 210 215;
     --android-ring: 215 217 228;
+
+    /* Android grey scale */
+    --android-grey1: 24 28 35;
+    --android-grey2: 65 71 84;
+    --android-grey3: 113 119 134;
+    --android-grey4: 193 198 215;
+    --android-grey5: 215 217 228;
+    --android-grey6: 249 249 255;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -67,6 +83,14 @@
       --input: 55 55 57;
       --ring: 40 40 42;
 
+      /* iOS dark grey scale */
+      --grey1: 142 142 147;
+      --grey2: 99 99 102;
+      --grey3: 70 70 73;
+      --grey4: 55 55 57;
+      --grey5: 40 40 42;
+      --grey6: 21 21 24;
+
       --android-background: 0 0 0;
       --android-foreground: 255 255 255;
       --android-card: 16 19 27;
@@ -86,6 +110,14 @@
       --android-border: 39 42 50;
       --android-input: 55 55 57;
       --android-ring: 39 42 50;
+
+      /* Android dark grey scale */
+      --android-grey1: 224 226 237;
+      --android-grey2: 139 144 160;
+      --android-grey3: 54 57 66;
+      --android-grey4: 49 53 61;
+      --android-grey5: 39 42 50;
+      --android-grey6: 16 19 27;
     }
   }
 }

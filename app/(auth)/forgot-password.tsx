@@ -20,8 +20,6 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { useColorScheme } from '@/lib/useColorScheme';
-
 import { ActivityIndicator } from '@/components/nativewindui/ActivityIndicator';
 import { Button } from '@/components/nativewindui/Button';
 import { Text } from '@/components/nativewindui/Text';
@@ -34,8 +32,6 @@ type Step = 'request' | 'verify' | 'success';
 
 export default function ForgotPasswordScreen() {
   const router = useRouter();
-  const { colorScheme } = useColorScheme();
-  const isDark = colorScheme === 'dark';
 
   const { forgotPassword, resetPassword } = useAuthStore();
 
@@ -49,9 +45,6 @@ export default function ForgotPasswordScreen() {
   const [submitting, setSubmitting] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = React.useState<Record<string, string>>({});
-  const [otpExpiresIn, setOtpExpiresIn] = React.useState(5); // minutes
-
-  const primaryColor = isDark ? '#3B82F6' : '#007AFE';
 
   function clearErrors() {
     setErrorMessage(null);
@@ -69,11 +62,10 @@ export default function ForgotPasswordScreen() {
     Keyboard.dismiss();
     setSubmitting(true);
     try {
-      const result = await forgotPassword({
+      await forgotPassword({
         identifierType,
         identifier: identifier.trim(),
       });
-      setOtpExpiresIn(result.expiresIn ?? 5);
       setStep('verify');
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Có lỗi xảy ra.';
@@ -115,21 +107,23 @@ export default function ForgotPasswordScreen() {
 
   if (step === 'success') {
     return (
-      <SafeAreaView className="flex-1" style={{ backgroundColor: isDark ? '#000' : '#fff' }}>
+      <SafeAreaView className="flex-1 bg-background">
         <View className="flex-1 items-center justify-center gap-4 px-6">
-          <View
-            className="h-20 w-20 items-center justify-center rounded-full"
-            style={{ backgroundColor: primaryColor }}>
-            <Text className="text-3xl font-bold text-white">✓</Text>
+          <View className="h-16 w-16 items-center justify-center rounded-full bg-primary">
+            <Text className="text-3xl font-bold text-primary-foreground">✓</Text>
           </View>
           <Text variant="title2" className="text-center font-semibold">
             Đặt lại mật khẩu thành công
           </Text>
-          <Text variant="subhead" color="secondary" className="text-center">
+          <Text variant="subhead" className="text-center text-muted-foreground">
             Mật khẩu của bạn đã được cập nhật. Vui lòng đăng nhập lại.
           </Text>
-          <Button size="lg" onPress={() => router.replace('/login')} className="mt-4 w-full">
-            <Text className="font-semibold text-white">Về trang đăng nhập</Text>
+          <Button
+            size="lg"
+            onPress={() => router.replace('/login')}
+            className="mt-4 w-full"
+            style={{ borderCurve: 'continuous' }}>
+            <Text className="font-semibold text-primary-foreground">Về trang đăng nhập</Text>
           </Button>
         </View>
       </SafeAreaView>
@@ -137,7 +131,7 @@ export default function ForgotPasswordScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1" style={{ backgroundColor: isDark ? '#000' : '#fff' }}>
+    <SafeAreaView className="flex-1 bg-background">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1">
@@ -145,29 +139,28 @@ export default function ForgotPasswordScreen() {
           <ScrollView
             contentInsetAdjustmentBehavior="automatic"
             keyboardShouldPersistTaps="handled"
-            className="flex-1">
+            className="flex-1"
+            showsVerticalScrollIndicator={false}>
             <View className="flex-1 gap-5 px-6 py-8">
               {/* Header */}
               <View className="items-center gap-2">
                 <Text variant="title1" className="text-center font-semibold">
                   {step === 'request' ? 'Quên mật khẩu' : 'Xác thực OTP'}
                 </Text>
-                <Text variant="subhead" color="secondary" className="text-center">
+                <Text variant="subhead" className="text-center text-muted-foreground">
                   {step === 'request'
                     ? 'Chúng tôi sẽ gửi mã xác thực đến bạn'
-                    : `Mã OTP đã được gửi. Có hiệu lực trong ${otpExpiresIn} phút.`}
+                    : 'Nhập mã OTP đã được gửi đến bạn'}
                 </Text>
               </View>
 
               {/* Identifier Type Selector (always visible) */}
-              <View
-                className="flex-row rounded-full p-1"
-                style={{ backgroundColor: isDark ? '#212225' : '#F0F0F3' }}>
+              <View className="flex-row rounded-full bg-muted p-1">
                 <Pressable
                   className="flex-1 items-center rounded-full py-2.5"
                   style={
                     identifierType === IdentifierType.EMAIL
-                      ? { backgroundColor: isDark ? '#2E3135' : '#fff' }
+                      ? { backgroundColor: 'rgb(var(--card))' }
                       : undefined
                   }
                   onPress={() => {
@@ -181,7 +174,9 @@ export default function ForgotPasswordScreen() {
                   <Text
                     variant="subhead"
                     className={
-                      identifierType === IdentifierType.EMAIL ? 'font-semibold' : undefined
+                      identifierType === IdentifierType.EMAIL
+                        ? 'font-semibold'
+                        : 'text-muted-foreground'
                     }>
                     Email
                   </Text>
@@ -190,7 +185,7 @@ export default function ForgotPasswordScreen() {
                   className="flex-1 items-center rounded-full py-2.5"
                   style={
                     identifierType === IdentifierType.PHONE
-                      ? { backgroundColor: isDark ? '#2E3135' : '#fff' }
+                      ? { backgroundColor: 'rgb(var(--card))' }
                       : undefined
                   }
                   onPress={() => {
@@ -204,7 +199,9 @@ export default function ForgotPasswordScreen() {
                   <Text
                     variant="subhead"
                     className={
-                      identifierType === IdentifierType.PHONE ? 'font-semibold' : undefined
+                      identifierType === IdentifierType.PHONE
+                        ? 'font-semibold'
+                        : 'text-muted-foreground'
                     }>
                     Số điện thoại
                   </Text>
@@ -223,7 +220,11 @@ export default function ForgotPasswordScreen() {
                     onChangeText={(text) => {
                       setIdentifier(text);
                       if (fieldErrors.identifier) {
-                        setFieldErrors((prev) => ({ ...prev, identifier: '' }));
+                        setFieldErrors((prev) => {
+                          const next = { ...prev };
+                          delete next.identifier;
+                          return next;
+                        });
                       }
                     }}
                     placeholder={
@@ -255,7 +256,11 @@ export default function ForgotPasswordScreen() {
                         onChangeText={(text) => {
                           setOtp(text);
                           if (fieldErrors.otp) {
-                            setFieldErrors((prev) => ({ ...prev, otp: '' }));
+                            setFieldErrors((prev) => {
+                              const next = { ...prev };
+                              delete next.otp;
+                              return next;
+                            });
                           }
                         }}
                         placeholder="Nhập mã OTP 6 số"
@@ -278,7 +283,11 @@ export default function ForgotPasswordScreen() {
                         onChangeText={(text) => {
                           setNewPassword(text);
                           if (fieldErrors.newPassword) {
-                            setFieldErrors((prev) => ({ ...prev, newPassword: '' }));
+                            setFieldErrors((prev) => {
+                              const next = { ...prev };
+                              delete next.newPassword;
+                              return next;
+                            });
                           }
                         }}
                         placeholder="Tối thiểu 8 ký tự"
@@ -298,7 +307,11 @@ export default function ForgotPasswordScreen() {
                         onChangeText={(text) => {
                           setConfirmPassword(text);
                           if (fieldErrors.confirmPassword) {
-                            setFieldErrors((prev) => ({ ...prev, confirmPassword: '' }));
+                            setFieldErrors((prev) => {
+                              const next = { ...prev };
+                              delete next.confirmPassword;
+                              return next;
+                            });
                           }
                         }}
                         placeholder="Nhập lại mật khẩu"
@@ -327,49 +340,27 @@ export default function ForgotPasswordScreen() {
                 size="lg"
                 onPress={step === 'request' ? handleRequestOtp : handleResetPassword}
                 disabled={submitting}
-                className="w-full">
+                className="w-full"
+                style={{ borderCurve: 'continuous' }}>
                 {submitting ? (
-                  <ActivityIndicator color="white" />
+                  <ActivityIndicator color="rgb(var(--primary-foreground))" />
                 ) : (
-                  <Text className="font-semibold text-white">
+                  <Text className="font-semibold text-primary-foreground">
                     {step === 'request' ? 'Gửi mã OTP' : 'Đặt lại mật khẩu'}
                   </Text>
                 )}
               </Button>
 
-              {/* Resend OTP / Back to login */}
+              {/* Back to login */}
               <View className="flex-row items-center justify-center gap-1 pt-2">
-                {step === 'verify' ? (
-                  <Pressable
-                    onPress={() => {
-                      setStep('request');
-                      setOtp('');
-                      setNewPassword('');
-                      setConfirmPassword('');
-                      clearErrors();
-                    }}
-                    disabled={submitting}
-                    accessibilityRole="button">
-                    <Text
-                      variant="subhead"
-                      className="font-semibold"
-                      style={{ color: primaryColor }}>
-                      ← Đổi tài khoản
-                    </Text>
-                  </Pressable>
-                ) : (
-                  <Pressable
-                    onPress={() => router.back()}
-                    disabled={submitting}
-                    accessibilityRole="button">
-                    <Text
-                      variant="subhead"
-                      className="font-semibold"
-                      style={{ color: primaryColor }}>
-                      ← Quay lại đăng nhập
-                    </Text>
-                  </Pressable>
-                )}
+                <Pressable
+                  onPress={() => router.back()}
+                  disabled={submitting}
+                  accessibilityRole="button">
+                  <Text variant="subhead" className="font-semibold text-primary">
+                    ← Quay lại đăng nhập
+                  </Text>
+                </Pressable>
               </View>
             </View>
           </ScrollView>

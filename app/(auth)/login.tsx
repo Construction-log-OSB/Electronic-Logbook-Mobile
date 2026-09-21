@@ -20,8 +20,7 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { useColorScheme } from '@/lib/useColorScheme';
-
+import { Brand } from '@/components/ui/Brand';
 import { ActivityIndicator } from '@/components/nativewindui/ActivityIndicator';
 import { Button } from '@/components/nativewindui/Button';
 import { Text } from '@/components/nativewindui/Text';
@@ -32,8 +31,6 @@ import { IdentifierType } from '@/src/auth/types';
 
 export default function LoginScreen() {
   const router = useRouter();
-  const { colorScheme } = useColorScheme();
-  const isDark = colorScheme === 'dark';
 
   const { login, status, error, clearError } = useAuthStore();
 
@@ -73,7 +70,6 @@ export default function LoginScreen() {
         identifier: identifier.trim(),
         password,
       });
-      // Navigation happens via _layout.tsx observing auth status
     } catch {
       // Error is already set in store by login()
     }
@@ -86,10 +82,8 @@ export default function LoginScreen() {
     setFieldErrors({});
   }
 
-  const primaryColor = isDark ? '#3B82F6' : '#007AFE'; // primary from theme
-
   return (
-    <SafeAreaView className="flex-1" style={{ backgroundColor: isDark ? '#000' : '#fff' }}>
+    <SafeAreaView className="flex-1 bg-background">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1">
@@ -97,34 +91,26 @@ export default function LoginScreen() {
           <ScrollView
             contentInsetAdjustmentBehavior="automatic"
             keyboardShouldPersistTaps="handled"
-            className="flex-1">
+            className="flex-1"
+            showsVerticalScrollIndicator={false}>
             <View className="flex-1 gap-6 px-6 py-12">
-              {/* Header */}
+              {/* Header with Brand */}
               <View className="items-center gap-4 pt-8">
-                <View
-                  className="h-20 w-20 items-center justify-center rounded-2xl"
-                  style={{ backgroundColor: primaryColor }}>
-                  <Text className="text-3xl font-bold text-white">OSB</Text>
-                </View>
+                <Brand size="large" />
                 <View className="items-center gap-1">
-                  <Text variant="title1" className="text-center font-semibold">
-                    Nhật ký điện tử
-                  </Text>
-                  <Text variant="subhead" color="secondary" className="text-center">
+                  <Text variant="subhead" className="text-center text-muted-foreground">
                     Đăng nhập để tiếp tục
                   </Text>
                 </View>
               </View>
 
               {/* Identifier Type Selector */}
-              <View
-                className="flex-row rounded-full p-1"
-                style={{ backgroundColor: isDark ? '#212225' : '#F0F0F3' }}>
+              <View className="flex-row rounded-full bg-muted p-1">
                 <Pressable
                   className="flex-1 items-center rounded-full py-2.5"
                   style={
                     identifierType === IdentifierType.EMAIL
-                      ? { backgroundColor: isDark ? '#2E3135' : '#fff' }
+                      ? { backgroundColor: 'rgb(var(--card))' }
                       : undefined
                   }
                   onPress={() => handleIdentifierTypeChange(IdentifierType.EMAIL)}
@@ -133,7 +119,9 @@ export default function LoginScreen() {
                   <Text
                     variant="subhead"
                     className={
-                      identifierType === IdentifierType.EMAIL ? 'font-semibold' : undefined
+                      identifierType === IdentifierType.EMAIL
+                        ? 'font-semibold'
+                        : 'text-muted-foreground'
                     }>
                     Email
                   </Text>
@@ -142,7 +130,7 @@ export default function LoginScreen() {
                   className="flex-1 items-center rounded-full py-2.5"
                   style={
                     identifierType === IdentifierType.PHONE
-                      ? { backgroundColor: isDark ? '#2E3135' : '#fff' }
+                      ? { backgroundColor: 'rgb(var(--card))' }
                       : undefined
                   }
                   onPress={() => handleIdentifierTypeChange(IdentifierType.PHONE)}
@@ -151,7 +139,9 @@ export default function LoginScreen() {
                   <Text
                     variant="subhead"
                     className={
-                      identifierType === IdentifierType.PHONE ? 'font-semibold' : undefined
+                      identifierType === IdentifierType.PHONE
+                        ? 'font-semibold'
+                        : 'text-muted-foreground'
                     }>
                     Số điện thoại
                   </Text>
@@ -224,11 +214,16 @@ export default function LoginScreen() {
 
               {/* Submit */}
               <View className="gap-3">
-                <Button size="lg" onPress={handleLogin} disabled={isLoading} className="w-full">
+                <Button
+                  size="lg"
+                  onPress={handleLogin}
+                  disabled={isLoading}
+                  className="w-full"
+                  style={{ borderCurve: 'continuous' }}>
                   {isLoading ? (
-                    <ActivityIndicator color="white" />
+                    <ActivityIndicator color="rgb(var(--primary-foreground))" />
                   ) : (
-                    <Text className="font-semibold text-white">Đăng nhập</Text>
+                    <Text className="font-semibold text-primary-foreground">Đăng nhập</Text>
                   )}
                 </Button>
 
@@ -237,7 +232,7 @@ export default function LoginScreen() {
                   onPress={() => router.push('/forgot-password')}
                   disabled={isLoading}
                   accessibilityRole="button">
-                  <Text variant="subhead" color="secondary">
+                  <Text variant="subhead" className="text-muted-foreground">
                     Quên mật khẩu?
                   </Text>
                 </Pressable>
@@ -245,14 +240,14 @@ export default function LoginScreen() {
 
               {/* Register link */}
               <View className="flex-row items-center justify-center gap-1 pt-4">
-                <Text variant="subhead" color="secondary">
+                <Text variant="subhead" className="text-muted-foreground">
                   Chưa có tài khoản?
                 </Text>
                 <Pressable
                   onPress={() => router.push('/register')}
                   disabled={isLoading}
                   accessibilityRole="button">
-                  <Text variant="subhead" className="font-semibold" style={{ color: primaryColor }}>
+                  <Text variant="subhead" className="font-semibold text-primary">
                     Đăng ký
                   </Text>
                 </Pressable>

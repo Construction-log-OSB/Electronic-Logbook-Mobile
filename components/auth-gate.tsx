@@ -1,27 +1,16 @@
 /**
  * AuthGate — handles auth state hydration and routes between auth/app flows.
  *
- * Prevents flicker:
- *   Splash → Login → Home (BAD — visible flicker)
- *   Splash → Home or Login directly (GOOD — single transition)
- *
  * Redirect rules:
  *   'initializing' → render splash (no redirect)
  *   'authenticated' → redirect to /(app)/home if not already there
  *   'unauthenticated' → redirect to /(auth)/login if not already there
  *   'authenticating' / 'logging_out' / 'error' → STAY (transient states)
- *
- * This means:
- * - Login failure (status='unauthenticated', error set) → stays on Login
- * - Logout in progress (status='logging_out') → stays on Home
- * - Auth error (status='unauthenticated', error set) → stays on Register/ForgotPassword
  */
 
 import { useRouter, useSegments } from 'expo-router';
 import * as React from 'react';
 import { View } from 'react-native';
-
-import { useColorScheme } from '@/lib/useColorScheme';
 
 import { ActivityIndicator } from '@/components/nativewindui/ActivityIndicator';
 import { Text } from '@/components/nativewindui/Text';
@@ -29,8 +18,6 @@ import { Text } from '@/components/nativewindui/Text';
 import { useAuthStore } from '@/src/auth/store/auth.store';
 
 function AuthGate(): React.JSX.Element | null {
-  const { colorScheme } = useColorScheme();
-  const isDark = colorScheme === 'dark';
   const router = useRouter();
   const segments = useSegments();
 
@@ -52,15 +39,19 @@ function AuthGate(): React.JSX.Element | null {
     const inAuthGroup = segments[0] === '(auth)';
     const inAppGroup = segments[0] === '(app)';
 
+    // Only redirect if we're in the WRONG group (not both at once)
+    // This prevents both AuthGates from fighting at the root level
     if (status === 'authenticated') {
-      if (!inAppGroup) {
-        router.replace('/(app)/home');
-      }
+      // Already in app — stay
+      if (inAppGroup) return;
+      // Not in app — redirect
+      router.replace('/(app)/home');
     } else {
       // status === 'unauthenticated' — stable non-auth state
-      if (!inAuthGroup) {
-        router.replace('/(auth)/login');
-      }
+      // Already in auth — stay
+      if (inAuthGroup) return;
+      // Not in auth — redirect
+      router.replace('/(auth)/login');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, segments]);
@@ -68,11 +59,9 @@ function AuthGate(): React.JSX.Element | null {
   // Render splash while initializing
   if (status === 'initializing') {
     return (
-      <View
-        className="flex-1 items-center justify-center"
-        style={{ backgroundColor: isDark ? '#000' : '#fff' }}>
+      <View className="flex-1 items-center justify-center bg-background">
         <ActivityIndicator size="large" />
-        <Text variant="subhead" color="secondary" className="mt-3">
+        <Text variant="subhead" className="mt-3 text-muted-foreground">
           Đang tải...
         </Text>
       </View>

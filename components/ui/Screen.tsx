@@ -8,7 +8,6 @@
  * - Consistent padding and spacing
  */
 
-import { useColorScheme } from '@/lib/useColorScheme';
 import { cn } from '@/lib/cn';
 import * as React from 'react';
 import {
@@ -42,14 +41,13 @@ export function Screen({
   edges = DEFAULT_EDGES,
   contentClassName,
 }: ScreenProps) {
-  const { colorScheme } = useColorScheme();
-  const isDark = colorScheme === 'dark';
-  const backgroundColor = isDark ? 'bg-black' : 'bg-white';
+  // `bg-background` resolves via the maritime palette CSS var, which already
+  // adapts to the active color scheme via prefers-color-scheme in global.css.
+  // No hardcoded bg-black/bg-white — see rule #4 in the task spec.
+  const backgroundColor = 'bg-background';
 
-  const content = scrollable ? (
-    <View className={cn('flex-1 px-6 py-6', contentClassName)}>{children}</View>
-  ) : (
-    <View className={cn('flex-1 px-6 py-6', contentClassName)}>{children}</View>
+  const content = (
+    <View className={cn('flex-1 px-4 py-4', contentClassName)}>{children}</View>
   );
 
   if (keyboardAvoiding) {

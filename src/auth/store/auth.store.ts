@@ -66,6 +66,12 @@ export interface AuthActions {
   forgotPassword: (dto: ForgotPasswordDto) => Promise<{ expiresIn: number }>;
   resetPassword: (dto: ResetPasswordDto) => Promise<void>;
   clearError: () => void;
+  /** Called by the apiClient when a refresh succeeded — keeps in-memory
+   *  tokens in sync without changing the auth status. */
+  applyRefreshedTokens: (tokens: { accessToken: string; refreshToken: string }) => void;
+  /** Called by the apiClient when the refresh token has been rejected —
+   *  the user must log in again. AuthGate handles the redirect. */
+  forceUnauthenticated: () => Promise<void>;
   isAuthenticated: () => boolean;
   isInitializing: () => boolean;
 }
@@ -211,6 +217,21 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
   // ── Clear Error ─────────────────────────────────────────────────
   clearError: () => set({ error: null }),
+
+  // ── Token refresh bridge (called by apiClient) ────────────────
+  applyRefreshedTokens: (tokens) =>
+    set({ accessToken: tokens.accessToken, refreshToken: tokens.refreshToken }),
+
+  forceUnauthenticated: async () => {
+    await clearTokens();
+    set({
+      status: 'unauthenticated',
+      accessToken: null,
+      refreshToken: null,
+      account: null,
+      error: 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.',
+    });
+  },
 
   // ── Derived selectors ────────────────────────────────────────────
   isAuthenticated: () => get().status === 'authenticated',

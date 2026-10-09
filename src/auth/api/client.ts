@@ -73,6 +73,26 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+/**
+ * Auth bridge — allows the apiClient (which lives outside React's tree)
+ * to notify the auth store about session events without creating a
+ * circular dependency. The store registers these callbacks at boot.
+ */
+
+type TokensHandler = (tokens: { accessToken: string; refreshToken: string }) => void;
+type SessionExpiredHandler = () => void;
+
+let onTokensRefreshed: TokensHandler | null = null;
+let onSessionExpired: SessionExpiredHandler | null = null;
+
+export function setAuthBridge(handlers: {
+  onTokensRefreshed?: TokensHandler;
+  onSessionExpired?: SessionExpiredHandler;
+}): void {
+  onTokensRefreshed = handlers.onTokensRefreshed ?? null;
+  onSessionExpired = handlers.onSessionExpired ?? null;
+}
+
 // ─── Response interceptor — handle 401 → refresh ──────────────────────────
 
 let isRefreshing = false;
@@ -133,9 +153,10 @@ apiClient.interceptors.response.use(
           { timeout: 30_000, headers: { 'Content-Type': 'application/json' } }
         );
 
-        await storeTokens({ accessToken: data.accessToken, refreshToken: data.refreshToken });
-
         const newToken = data.accessToken;
+        const newRefresh = data.refreshToken;
+        await storeTokens({ accessToken: newToken, refreshToken: newRefresh });
+        onTokensRefreshed?.({ accessToken: newToken, refreshToken: newRefresh });
         processRefreshQueue(newToken);
         isRefreshing = false;
 
@@ -147,6 +168,7 @@ apiClient.interceptors.response.use(
         processRefreshQueue('', refreshError);
         isRefreshing = false;
         await clearTokens();
+        onSessionExpired?.();
         return Promise.reject(refreshError);
       }
     }

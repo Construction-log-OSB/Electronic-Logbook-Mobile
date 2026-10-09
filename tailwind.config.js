@@ -52,6 +52,61 @@ module.exports = {
         grey4: `rgb(var(--grey4) / <alpha-value>)`,
         grey5: `rgb(var(--grey5) / <alpha-value>)`,
         grey6: `rgb(var(--grey6) / <alpha-value>)`,
+
+        // Semantic text
+        textPrimary: `rgb(var(--text-primary) / <alpha-value>)`,
+        textSecondary: `rgb(var(--text-secondary) / <alpha-value>)`,
+        textMuted: `rgb(var(--text-muted) / <alpha-value>)`,
+        textPlaceholder: `rgb(var(--text-placeholder) / <alpha-value>)`,
+        textInverse: `rgb(var(--text-inverse) / <alpha-value>)`,
+
+        // Semantic surfaces
+        surface: `rgb(var(--card) / <alpha-value>)`,
+        surfaceSecondary: `rgb(var(--surface-secondary) / <alpha-value>)`,
+        surfaceElevated: `rgb(var(--surface-elevated) / <alpha-value>)`,
+
+        // Status (semantic)
+        success: `rgb(var(--success) / <alpha-value>)`,
+        warning: `rgb(var(--warning) / <alpha-value>)`,
+        danger: `rgb(var(--danger) / <alpha-value>)`,
+        info: `rgb(var(--info) / <alpha-value>)`,
+        successSurface: `rgb(var(--success-surface) / <alpha-value>)`,
+        warningSurface: `rgb(var(--warning-surface) / <alpha-value>)`,
+        dangerSurface: `rgb(var(--danger-surface) / <alpha-value>)`,
+        infoSurface: `rgb(var(--info-surface) / <alpha-value>)`,
+        neutralSurface: `rgb(var(--neutral-surface) / <alpha-value>)`,
+
+        // Sync
+        syncSynced: `rgb(var(--sync-synced) / <alpha-value>)`,
+        syncSyncedSurface: `rgb(var(--sync-synced-surface) / <alpha-value>)`,
+        syncPending: `rgb(var(--sync-pending) / <alpha-value>)`,
+        syncPendingSurface: `rgb(var(--sync-pending-surface) / <alpha-value>)`,
+        syncSyncing: `rgb(var(--sync-syncing) / <alpha-value>)`,
+        syncSyncingSurface: `rgb(var(--sync-syncing-surface) / <alpha-value>)`,
+        syncError: `rgb(var(--sync-error) / <alpha-value>)`,
+        syncErrorSurface: `rgb(var(--sync-error-surface) / <alpha-value>)`,
+        syncConflict: `rgb(var(--sync-conflict) / <alpha-value>)`,
+        syncConflictSurface: `rgb(var(--sync-conflict-surface) / <alpha-value>)`,
+        syncOffline: `rgb(var(--sync-offline) / <alpha-value>)`,
+        syncOfflineSurface: `rgb(var(--sync-offline-surface) / <alpha-value>)`,
+
+        // Trip status
+        tripDraft: `rgb(var(--trip-draft) / <alpha-value>)`,
+        tripPreparing: `rgb(var(--trip-preparing) / <alpha-value>)`,
+        tripDeparted: `rgb(var(--trip-departed) / <alpha-value>)`,
+        tripFishing: `rgb(var(--trip-fishing) / <alpha-value>)`,
+        tripReturning: `rgb(var(--trip-returning) / <alpha-value>)`,
+        tripCompleted: `rgb(var(--trip-completed) / <alpha-value>)`,
+        tripCancelled: `rgb(var(--trip-cancelled) / <alpha-value>)`,
+
+        // Tab bar
+        tabBarBackground: `rgb(var(--tab-bar-background) / <alpha-value>)`,
+        tabBarBorder: `rgb(var(--tab-bar-border) / <alpha-value>)`,
+        tabBarActive: `rgb(var(--tab-bar-active) / <alpha-value>)`,
+        tabBarInactive: `rgb(var(--tab-bar-inactive) / <alpha-value>)`,
+
+        // Utility
+        skeleton: `rgb(var(--skeleton) / <alpha-value>)`,
       },
       borderWidth: {
         hairline: hairlineWidth(),

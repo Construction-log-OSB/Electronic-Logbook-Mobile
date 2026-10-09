@@ -1,10 +1,13 @@
 {
   "expo": {
-    "name": "my-expo-app",
-    "slug": "my-expo-app",
+    "name": "electronic-logbook",
+    "slug": "electronic-logbook",
     "version": "1.0.0",
-    "scheme": "my-expo-app",
-    "platforms": ["ios", "android"],
+    "scheme": "electronic-logbook",
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "web": {
       "bundler": "metro",
       "output": "static",
@@ -22,7 +25,8 @@
       "@react-native-community/datetimepicker",
       "expo-font",
       "expo-status-bar",
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-sqlite"
     ],
     "experiments": {
       "typedRoutes": true,
@@ -31,7 +35,9 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },

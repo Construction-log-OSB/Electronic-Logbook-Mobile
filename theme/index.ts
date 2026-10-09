@@ -1,29 +1,34 @@
+/**
+ * NAV_THEME — bridge between the design-system palette and the React
+ * Navigation theme contract required by `expo-router`.
+ */
+
 import { Theme, DefaultTheme, DarkTheme } from 'expo-router/react-navigation';
 
-import { COLORS } from './colors';
+import { DARK_COLORS, LIGHT_COLORS } from '@/src/design-system/palette';
 
 const NAV_THEME: { light: Theme; dark: Theme } = {
   light: {
     dark: false,
     colors: {
-      background: COLORS.light.background,
-      border: COLORS.light.grey5,
-      card: COLORS.light.card,
-      notification: COLORS.light.destructive,
-      primary: COLORS.light.primary,
-      text: COLORS.black,
+      background: LIGHT_COLORS.background,
+      border: LIGHT_COLORS.border,
+      card: LIGHT_COLORS.surface,
+      notification: LIGHT_COLORS.danger,
+      primary: LIGHT_COLORS.primary,
+      text: LIGHT_COLORS.textPrimary,
     },
     fonts: DefaultTheme.fonts,
   },
   dark: {
     dark: true,
     colors: {
-      background: COLORS.dark.background,
-      border: COLORS.dark.grey5,
-      card: COLORS.dark.grey6,
-      notification: COLORS.dark.destructive,
-      primary: COLORS.dark.primary,
-      text: COLORS.white,
+      background: DARK_COLORS.background,
+      border: DARK_COLORS.border,
+      card: DARK_COLORS.surface,
+      notification: DARK_COLORS.danger,
+      primary: DARK_COLORS.primary,
+      text: DARK_COLORS.textPrimary,
     },
     fonts: DarkTheme.fonts,
   },

@@ -1,5 +1,8 @@
 /**
  * Register Screen — SATURN Electronic Logbook Mobile App
+ *
+ * Maritime palette, semantic tokens. Touch targets ≥ 44pt.
+ * Identifier type is a reusable SegmentedControl (Email | Phone).
  */
 
 import { useRouter } from 'expo-router';
@@ -8,7 +11,6 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   ScrollView,
   TouchableWithoutFeedback,
   View,
@@ -20,9 +22,16 @@ import { ActivityIndicator } from '@/components/nativewindui/ActivityIndicator';
 import { Button } from '@/components/nativewindui/Button';
 import { Text } from '@/components/nativewindui/Text';
 import { TextInput } from '@/src/components/nativewindui/TextInput';
+import { SegmentedControl } from '@/components/ui/SegmentedControl';
+import { ScreenPadding, Spacing } from '@/src/design-system/tokens';
 
 import { useAuthStore } from '@/src/auth/store/auth.store';
 import { IdentifierType } from '@/src/auth/types';
+
+const IDENTIFIER_OPTIONS: { value: IdentifierType; label: string }[] = [
+  { value: IdentifierType.EMAIL, label: 'Email' },
+  { value: IdentifierType.PHONE, label: 'Số điện thoại' },
+];
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -65,7 +74,6 @@ export default function RegisterScreen() {
         identifier: identifier.trim(),
         fullName: fullName.trim(),
       });
-      // Navigate to login after successful registration
       router.replace('/login');
     } catch {
       // Error set in store
@@ -92,7 +100,12 @@ export default function RegisterScreen() {
             keyboardShouldPersistTaps="handled"
             className="flex-1"
             showsVerticalScrollIndicator={false}>
-            <View className="flex-1 gap-5 px-6 py-8">
+            <View
+              className="flex-1 gap-5"
+              style={{
+                paddingHorizontal: ScreenPadding.horizontal,
+                paddingVertical: Spacing.lg,
+              }}>
               {/* Header */}
               <View className="items-center gap-2">
                 <Text variant="title1" className="text-center font-semibold">
@@ -103,53 +116,14 @@ export default function RegisterScreen() {
                 </Text>
               </View>
 
-              {/* Identifier Type Selector */}
-              <View className="flex-row rounded-full bg-muted p-1">
-                <Pressable
-                  className="flex-1 items-center rounded-full py-2.5"
-                  style={
-                    identifierType === IdentifierType.EMAIL
-                      ? { backgroundColor: 'rgb(var(--card))' }
-                      : undefined
-                  }
-                  onPress={() => handleIdentifierTypeChange(IdentifierType.EMAIL)}
-                  accessibilityRole="button"
-                  accessibilityState={{ selected: identifierType === IdentifierType.EMAIL }}>
-                  <Text
-                    variant="subhead"
-                    className={
-                      identifierType === IdentifierType.EMAIL
-                        ? 'font-semibold'
-                        : 'text-muted-foreground'
-                    }>
-                    Email
-                  </Text>
-                </Pressable>
-                <Pressable
-                  className="flex-1 items-center rounded-full py-2.5"
-                  style={
-                    identifierType === IdentifierType.PHONE
-                      ? { backgroundColor: 'rgb(var(--card))' }
-                      : undefined
-                  }
-                  onPress={() => handleIdentifierTypeChange(IdentifierType.PHONE)}
-                  accessibilityRole="button"
-                  accessibilityState={{ selected: identifierType === IdentifierType.PHONE }}>
-                  <Text
-                    variant="subhead"
-                    className={
-                      identifierType === IdentifierType.PHONE
-                        ? 'font-semibold'
-                        : 'text-muted-foreground'
-                    }>
-                    Số điện thoại
-                  </Text>
-                </Pressable>
-              </View>
+              <SegmentedControl
+                options={IDENTIFIER_OPTIONS}
+                value={identifierType}
+                onChange={handleIdentifierTypeChange}
+              />
 
               {/* Form */}
               <View className="gap-4">
-                {/* Full Name */}
                 <TextInput>
                   <TextInput.Label>Họ tên</TextInput.Label>
                   <TextInput.Input
@@ -171,7 +145,6 @@ export default function RegisterScreen() {
                   ) : null}
                 </TextInput>
 
-                {/* Identifier */}
                 <TextInput>
                   <TextInput.Label>
                     {identifierType === IdentifierType.EMAIL ? 'Email' : 'Số điện thoại'}
@@ -203,7 +176,6 @@ export default function RegisterScreen() {
                 </TextInput>
               </View>
 
-              {/* Global error */}
               {error ? (
                 <View className="border-destructive/30 bg-destructive/10 rounded-xl border p-3">
                   <Text variant="footnote" className="text-destructive">
@@ -212,16 +184,14 @@ export default function RegisterScreen() {
                 </View>
               ) : null}
 
-              {/* Info */}
               <View className="rounded-xl bg-muted p-3">
                 <Text variant="footnote" className="text-muted-foreground">
                   Mật khẩu sẽ được gửi đến{' '}
-                  {identifierType === IdentifierType.EMAIL ? 'email' : 'số điện thoại'} của bạn sau
-                  khi đăng ký.
+                  {identifierType === IdentifierType.EMAIL ? 'email' : 'số điện thoại'} của bạn
+                  sau khi đăng ký.
                 </Text>
               </View>
 
-              {/* Submit */}
               <Button
                 size="lg"
                 onPress={handleRegister}
@@ -235,19 +205,21 @@ export default function RegisterScreen() {
                 )}
               </Button>
 
-              {/* Back to login */}
-              <View className="flex-row items-center justify-center gap-1 pt-2">
+              <View
+                className="flex-row items-center justify-center gap-1"
+                style={{ paddingTop: Spacing.xs }}
+              >
                 <Text variant="subhead" className="text-muted-foreground">
                   Đã có tài khoản?
                 </Text>
-                <Pressable
-                  onPress={() => router.back()}
-                  disabled={submitting}
-                  accessibilityRole="button">
-                  <Text variant="subhead" className="font-semibold text-primary">
-                    Đăng nhập
-                  </Text>
-                </Pressable>
+                <Text
+                  variant="subhead"
+                  className="font-semibold text-primary"
+                  onPress={() => !submitting && router.back()}
+                  accessibilityRole="button"
+                  accessibilityLabel="Quay lại đăng nhập">
+                  Đăng nhập
+                </Text>
               </View>
             </View>
           </ScrollView>

@@ -12,7 +12,6 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   ScrollView,
   TouchableWithoutFeedback,
   View,
@@ -24,11 +23,18 @@ import { ActivityIndicator } from '@/components/nativewindui/ActivityIndicator';
 import { Button } from '@/components/nativewindui/Button';
 import { Text } from '@/components/nativewindui/Text';
 import { TextInput } from '@/src/components/nativewindui/TextInput';
+import { SegmentedControl } from '@/components/ui/SegmentedControl';
+import { ScreenPadding, Spacing } from '@/src/design-system/tokens';
 
 import { useAuthStore } from '@/src/auth/store/auth.store';
 import { IdentifierType } from '@/src/auth/types';
 
 type Step = 'request' | 'verify' | 'success';
+
+const IDENTIFIER_OPTIONS: { value: IdentifierType; label: string }[] = [
+  { value: IdentifierType.EMAIL, label: 'Email' },
+  { value: IdentifierType.PHONE, label: 'Số điện thoại' },
+];
 
 export default function ForgotPasswordScreen() {
   const router = useRouter();
@@ -141,7 +147,12 @@ export default function ForgotPasswordScreen() {
             keyboardShouldPersistTaps="handled"
             className="flex-1"
             showsVerticalScrollIndicator={false}>
-            <View className="flex-1 gap-5 px-6 py-8">
+            <View
+              className="flex-1 gap-5"
+              style={{
+                paddingHorizontal: ScreenPadding.horizontal,
+                paddingVertical: Spacing.lg,
+              }}>
               {/* Header */}
               <View className="items-center gap-2">
                 <Text variant="title1" className="text-center font-semibold">
@@ -154,59 +165,16 @@ export default function ForgotPasswordScreen() {
                 </Text>
               </View>
 
-              {/* Identifier Type Selector (always visible) */}
-              <View className="flex-row rounded-full bg-muted p-1">
-                <Pressable
-                  className="flex-1 items-center rounded-full py-2.5"
-                  style={
-                    identifierType === IdentifierType.EMAIL
-                      ? { backgroundColor: 'rgb(var(--card))' }
-                      : undefined
-                  }
-                  onPress={() => {
-                    setIdentifierType(IdentifierType.EMAIL);
-                    setIdentifier('');
-                    clearErrors();
-                  }}
-                  disabled={step === 'verify' || submitting}
-                  accessibilityRole="button"
-                  accessibilityState={{ selected: identifierType === IdentifierType.EMAIL }}>
-                  <Text
-                    variant="subhead"
-                    className={
-                      identifierType === IdentifierType.EMAIL
-                        ? 'font-semibold'
-                        : 'text-muted-foreground'
-                    }>
-                    Email
-                  </Text>
-                </Pressable>
-                <Pressable
-                  className="flex-1 items-center rounded-full py-2.5"
-                  style={
-                    identifierType === IdentifierType.PHONE
-                      ? { backgroundColor: 'rgb(var(--card))' }
-                      : undefined
-                  }
-                  onPress={() => {
-                    setIdentifierType(IdentifierType.PHONE);
-                    setIdentifier('');
-                    clearErrors();
-                  }}
-                  disabled={step === 'verify' || submitting}
-                  accessibilityRole="button"
-                  accessibilityState={{ selected: identifierType === IdentifierType.PHONE }}>
-                  <Text
-                    variant="subhead"
-                    className={
-                      identifierType === IdentifierType.PHONE
-                        ? 'font-semibold'
-                        : 'text-muted-foreground'
-                    }>
-                    Số điện thoại
-                  </Text>
-                </Pressable>
-              </View>
+              <SegmentedControl
+                options={IDENTIFIER_OPTIONS}
+                value={identifierType}
+                onChange={(newType) => {
+                  setIdentifierType(newType);
+                  setIdentifier('');
+                  clearErrors();
+                }}
+                disabled={step === 'verify' || submitting}
+              />
 
               {/* Form */}
               <View className="gap-4">
@@ -352,15 +320,18 @@ export default function ForgotPasswordScreen() {
               </Button>
 
               {/* Back to login */}
-              <View className="flex-row items-center justify-center gap-1 pt-2">
-                <Pressable
-                  onPress={() => router.back()}
-                  disabled={submitting}
-                  accessibilityRole="button">
-                  <Text variant="subhead" className="font-semibold text-primary">
-                    ← Quay lại đăng nhập
-                  </Text>
-                </Pressable>
+              <View
+                className="flex-row items-center justify-center gap-1"
+                style={{ paddingTop: Spacing.xs }}
+              >
+                <Text
+                  variant="subhead"
+                  className="font-semibold text-primary"
+                  onPress={() => !submitting && router.back()}
+                  accessibilityRole="button"
+                  accessibilityLabel="Quay lại đăng nhập">
+                  ← Quay lại đăng nhập
+                </Text>
               </View>
             </View>
           </ScrollView>

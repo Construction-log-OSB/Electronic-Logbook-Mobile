@@ -1,9 +1,8 @@
 /**
  * Login Screen — SATURN Electronic Logbook Mobile App
  *
- * Design: NativewindUI + Tailwind, mobile-first.
- * Auth state managed via useAuthStore.
- * Boot flow handled in app/_layout.tsx (hydration before render).
+ * Maritime palette, semantic tokens. Touch targets ≥ 44pt.
+ * No hardcoded device dimensions. Safe area via SafeAreaView.
  */
 
 import { useRouter } from 'expo-router';
@@ -12,7 +11,6 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   ScrollView,
   TouchableWithoutFeedback,
   View,
@@ -25,9 +23,16 @@ import { ActivityIndicator } from '@/components/nativewindui/ActivityIndicator';
 import { Button } from '@/components/nativewindui/Button';
 import { Text } from '@/components/nativewindui/Text';
 import { TextInput } from '@/src/components/nativewindui/TextInput';
+import { SegmentedControl } from '@/components/ui/SegmentedControl';
+import { ScreenPadding, Spacing } from '@/src/design-system/tokens';
 
 import { useAuthStore } from '@/src/auth/store/auth.store';
 import { IdentifierType } from '@/src/auth/types';
+
+const IDENTIFIER_OPTIONS: { value: IdentifierType; label: string }[] = [
+  { value: IdentifierType.EMAIL, label: 'Email' },
+  { value: IdentifierType.PHONE, label: 'Số điện thoại' },
+];
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -93,9 +98,14 @@ export default function LoginScreen() {
             keyboardShouldPersistTaps="handled"
             className="flex-1"
             showsVerticalScrollIndicator={false}>
-            <View className="flex-1 gap-6 px-6 py-12">
+            <View
+              className="flex-1 gap-6"
+              style={{
+                paddingHorizontal: ScreenPadding.horizontal,
+                paddingVertical: Spacing.xxl,
+              }}>
               {/* Header with Brand */}
-              <View className="items-center gap-4 pt-8">
+              <View className="items-center gap-4" style={{ paddingTop: Spacing.xl }}>
                 <Brand size="large" />
                 <View className="items-center gap-1">
                   <Text variant="subhead" className="text-center text-muted-foreground">
@@ -104,53 +114,15 @@ export default function LoginScreen() {
                 </View>
               </View>
 
-              {/* Identifier Type Selector */}
-              <View className="flex-row rounded-full bg-muted p-1">
-                <Pressable
-                  className="flex-1 items-center rounded-full py-2.5"
-                  style={
-                    identifierType === IdentifierType.EMAIL
-                      ? { backgroundColor: 'rgb(var(--card))' }
-                      : undefined
-                  }
-                  onPress={() => handleIdentifierTypeChange(IdentifierType.EMAIL)}
-                  accessibilityRole="button"
-                  accessibilityState={{ selected: identifierType === IdentifierType.EMAIL }}>
-                  <Text
-                    variant="subhead"
-                    className={
-                      identifierType === IdentifierType.EMAIL
-                        ? 'font-semibold'
-                        : 'text-muted-foreground'
-                    }>
-                    Email
-                  </Text>
-                </Pressable>
-                <Pressable
-                  className="flex-1 items-center rounded-full py-2.5"
-                  style={
-                    identifierType === IdentifierType.PHONE
-                      ? { backgroundColor: 'rgb(var(--card))' }
-                      : undefined
-                  }
-                  onPress={() => handleIdentifierTypeChange(IdentifierType.PHONE)}
-                  accessibilityRole="button"
-                  accessibilityState={{ selected: identifierType === IdentifierType.PHONE }}>
-                  <Text
-                    variant="subhead"
-                    className={
-                      identifierType === IdentifierType.PHONE
-                        ? 'font-semibold'
-                        : 'text-muted-foreground'
-                    }>
-                    Số điện thoại
-                  </Text>
-                </Pressable>
-              </View>
+              {/* Identifier Type Selector — accessible segmented control */}
+              <SegmentedControl
+                options={IDENTIFIER_OPTIONS}
+                value={identifierType}
+                onChange={handleIdentifierTypeChange}
+              />
 
               {/* Form */}
               <View className="gap-4">
-                {/* Identifier */}
                 <TextInput>
                   <TextInput.Label>
                     {identifierType === IdentifierType.EMAIL ? 'Email' : 'Số điện thoại'}
@@ -182,7 +154,6 @@ export default function LoginScreen() {
                   ) : null}
                 </TextInput>
 
-                {/* Password */}
                 <TextInput>
                   <TextInput.Label>Mật khẩu</TextInput.Label>
                   <TextInput.PasswordInput
@@ -227,30 +198,34 @@ export default function LoginScreen() {
                   )}
                 </Button>
 
-                <Pressable
-                  className="items-center py-2"
-                  onPress={() => router.push('/forgot-password')}
-                  disabled={isLoading}
-                  accessibilityRole="button">
-                  <Text variant="subhead" className="text-muted-foreground">
+                <View className="items-center" style={{ paddingVertical: Spacing.xs }}>
+                  <Text
+                    variant="subhead"
+                    className="text-muted-foreground"
+                    onPress={() => !isLoading && router.push('/forgot-password')}
+                    accessibilityRole="button"
+                    accessibilityLabel="Quên mật khẩu">
                     Quên mật khẩu?
                   </Text>
-                </Pressable>
+                </View>
               </View>
 
               {/* Register link */}
-              <View className="flex-row items-center justify-center gap-1 pt-4">
+              <View
+                className="flex-row items-center justify-center gap-1"
+                style={{ paddingTop: Spacing.md }}
+              >
                 <Text variant="subhead" className="text-muted-foreground">
                   Chưa có tài khoản?
                 </Text>
-                <Pressable
-                  onPress={() => router.push('/register')}
-                  disabled={isLoading}
-                  accessibilityRole="button">
-                  <Text variant="subhead" className="font-semibold text-primary">
-                    Đăng ký
-                  </Text>
-                </Pressable>
+                <Text
+                  variant="subhead"
+                  className="font-semibold text-primary"
+                  onPress={() => !isLoading && router.push('/register')}
+                  accessibilityRole="button"
+                  accessibilityLabel="Đăng ký tài khoản mới">
+                  Đăng ký
+                </Text>
               </View>
             </View>
           </ScrollView>

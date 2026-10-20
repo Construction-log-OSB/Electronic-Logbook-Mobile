@@ -12,6 +12,12 @@ web-build/
 # expo router
 expo-env.d.ts
 
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
 
 ios
 android

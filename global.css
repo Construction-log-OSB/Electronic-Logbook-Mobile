@@ -2,29 +2,96 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Maritime palette — semantic tokens.
+ *
+ * Light + Dark use DEDICATED palettes (no inversion). All tokens expressed as
+ * raw RGB triplets so NativeWind can wrap them as `rgb(var(--token))`.
+ *
+ * Rules:
+ *  - Never use pure black (#000) or pure white (#FFF) as app surface
+ *  - Status colors remain recognizable in both themes
+ *  - Sufficient contrast for outdoor / sunlight usage
+ */
 @layer base {
   :root {
-    --background: 242 242 247;
-    --foreground: 0 0 0;
-    --card: 255 255 255;
-    --card-foreground: 8 28 30;
-    --popover: 230 230 235;
-    --popover-foreground: 0 0 0;
-    --primary: 0 123 254;
-    --primary-foreground: 255 255 255;
-    --secondary: 45 175 231;
-    --secondary-foreground: 255 255 255;
-    --muted: 175 176 180;
-    --muted-foreground: 142 142 147;
-    --accent: 255 40 84;
-    --accent-foreground: 255 255 255;
-    --destructive: 255 56 43;
-    --destructive-foreground: 255 255 255;
-    --border: 230 230 235;
-    --input: 210 210 215;
-    --ring: 230 230 235;
+    /* Surface */
+    --background: 245 247 249;          /* #F5F7F9 */
+    --foreground: 23 33 43;              /* #17212B */
+    --card: 255 255 255;                 /* #FFFFFF */
+    --card-foreground: 23 33 43;
+    --surface-secondary: 238 242 245;    /* #EEF2F5 */
+    --surface-elevated: 255 255 255;
 
-    /* iOS system grey scale */
+    /* Brand */
+    --primary: 11 58 91;                 /* Deep Ocean Blue #0B3A5B */
+    --primary-pressed: 8 43 69;
+    --primary-foreground: 255 255 255;
+    --secondary: 23 107 135;             /* #176B87 */
+    --accent: 42 157 143;                /* #2A9D8F */
+
+    /* Muted / borders */
+    --muted: 238 242 245;                /* #EEF2F5 */
+    --muted-foreground: 123 135 148;     /* #7B8794 */
+    --border: 217 224 230;               /* #D9E0E6 */
+    --input: 217 224 230;
+    --ring: 11 58 91;
+
+    /* Text */
+    --text-primary: 23 33 43;            /* #17212B */
+    --text-secondary: 82 96 109;         /* #52606D */
+    --text-muted: 123 135 148;           /* #7B8794 */
+    --text-placeholder: 154 165 177;     /* #9AA5B1 */
+    --text-inverse: 255 255 255;
+
+    /* Status */
+    --success: 46 125 50;                /* #2E7D32 */
+    --warning: 237 139 0;                /* #ED8B00 */
+    --danger: 198 40 40;                 /* #C62828 */
+    --info: 25 118 210;                  /* #1976D2 */
+    --destructive: 198 40 40;
+    --destructive-foreground: 255 255 255;
+
+    /* Status surfaces (low-alpha backgrounds) */
+    --success-surface: 230 244 234;
+    --warning-surface: 255 243 224;
+    --danger-surface: 253 236 234;
+    --info-surface: 227 242 253;
+    --neutral-surface: 238 242 245;
+
+    /* Sync UI */
+    --sync-synced: 46 125 50;
+    --sync-synced-surface: 230 244 234;
+    --sync-pending: 237 139 0;
+    --sync-pending-surface: 255 243 224;
+    --sync-syncing: 25 118 210;
+    --sync-syncing-surface: 227 242 253;
+    --sync-error: 198 40 40;
+    --sync-error-surface: 253 236 234;
+    --sync-conflict: 198 40 40;
+    --sync-conflict-surface: 253 236 234;
+    --sync-offline: 82 96 109;
+    --sync-offline-surface: 238 242 245;
+
+    /* Trip status */
+    --trip-draft: 123 135 148;
+    --trip-preparing: 237 139 0;
+    --trip-departed: 25 118 210;
+    --trip-fishing: 42 157 143;
+    --trip-returning: 237 139 0;
+    --trip-completed: 23 107 135;
+    --trip-cancelled: 198 40 40;
+
+    /* Tab bar */
+    --tab-bar-background: 255 255 255;
+    --tab-bar-border: 217 224 230;
+    --tab-bar-active: 11 58 91;
+    --tab-bar-inactive: 123 135 148;
+
+    /* Utility */
+    --skeleton: 225 231 236;
+
+    /* Legacy iOS-style grey (kept for backward-compat in existing components) */
     --grey1: 142 142 147;
     --grey2: 175 176 180;
     --grey3: 199 199 204;
@@ -32,58 +99,96 @@
     --grey5: 230 230 235;
     --grey6: 242 242 247;
 
-    --android-background: 249 249 255;
-    --android-foreground: 0 0 0;
+    --android-background: 245 247 249;
+    --android-foreground: 23 33 43;
     --android-card: 255 255 255;
-    --android-card-foreground: 24 28 35;
-    --android-popover: 215 217 228;
-    --android-popover-foreground: 0 0 0;
-    --android-primary: 0 112 233;
+    --android-card-foreground: 23 33 43;
+    --android-primary: 11 58 91;
     --android-primary-foreground: 255 255 255;
-    --android-secondary: 176 201 255;
-    --android-secondary-foreground: 20 55 108;
-    --android-muted: 193 198 215;
-    --android-muted-foreground: 65 71 84;
-    --android-accent: 169 73 204;
-    --android-accent-foreground: 255 255 255;
-    --android-destructive: 186 26 26;
+    --android-secondary: 23 107 135;
+    --android-destructive: 198 40 40;
     --android-destructive-foreground: 255 255 255;
-    --android-border: 215 217 228;
-    --android-input: 210 210 215;
-    --android-ring: 215 217 228;
-
-    /* Android grey scale */
-    --android-grey1: 24 28 35;
-    --android-grey2: 65 71 84;
-    --android-grey3: 113 119 134;
-    --android-grey4: 193 198 215;
-    --android-grey5: 215 217 228;
-    --android-grey6: 249 249 255;
+    --android-border: 217 224 230;
+    --android-input: 217 224 230;
+    --android-ring: 217 224 230;
   }
 
   @media (prefers-color-scheme: dark) {
     :root {
-      --background: 0 0 0;
-      --foreground: 255 255 255;
-      --card: 21 21 24;
-      --card-foreground: 255 255 255;
-      --popover: 40 40 42;
-      --popover-foreground: 255 255 255;
-      --primary: 3 133 255;
-      --primary-foreground: 255 255 255;
-      --secondary: 100 211 254;
-      --secondary-foreground: 255 255 255;
-      --muted: 70 70 73;
-      --muted-foreground: 142 142 147;
-      --accent: 255 52 95;
-      --accent-foreground: 255 255 255;
-      --destructive: 254 67 54;
-      --destructive-foreground: 255 255 255;
-      --border: 40 40 42;
-      --input: 55 55 57;
-      --ring: 40 40 42;
+      /* Surface */
+      --background: 15 23 32;            /* #0F1720 */
+      --foreground: 244 247 250;         /* #F4F7FA */
+      --card: 22 33 43;                  /* #16212B */
+      --card-foreground: 244 247 250;
+      --surface-secondary: 29 43 54;     /* #1D2B36 */
+      --surface-elevated: 31 44 56;
 
-      /* iOS dark grey scale */
+      /* Brand */
+      --primary: 95 169 214;             /* Lighter blue for contrast on dark */
+      --primary-pressed: 79 152 196;
+      --primary-foreground: 15 23 32;
+      --secondary: 42 157 143;           /* #2A9D8F */
+      --accent: 95 169 214;
+
+      /* Muted / borders */
+      --muted: 29 43 54;
+      --muted-foreground: 136 149 162;   /* #8895A2 */
+      --border: 43 57 69;                /* #2B3945 */
+      --input: 43 57 69;
+      --ring: 95 169 214;
+
+      /* Text */
+      --text-primary: 244 247 250;
+      --text-secondary: 184 194 204;     /* #B8C2CC */
+      --text-muted: 136 149 162;
+      --text-placeholder: 95 110 122;
+      --text-inverse: 23 33 43;
+
+      /* Status */
+      --success: 102 187 106;
+      --warning: 255 167 38;
+      --danger: 239 83 80;
+      --info: 66 165 245;
+      --destructive: 239 83 80;
+      --destructive-foreground: 15 23 32;
+
+      --success-surface: 30 51 36;
+      --warning-surface: 58 46 26;
+      --danger-surface: 58 31 31;
+      --info-surface: 26 42 58;
+      --neutral-surface: 29 43 54;
+
+      /* Sync UI */
+      --sync-synced: 102 187 106;
+      --sync-synced-surface: 30 51 36;
+      --sync-pending: 255 167 38;
+      --sync-pending-surface: 58 46 26;
+      --sync-syncing: 66 165 245;
+      --sync-syncing-surface: 26 42 58;
+      --sync-error: 239 83 80;
+      --sync-error-surface: 58 31 31;
+      --sync-conflict: 239 83 80;
+      --sync-conflict-surface: 58 31 31;
+      --sync-offline: 136 149 162;
+      --sync-offline-surface: 29 43 54;
+
+      /* Trip status */
+      --trip-draft: 136 149 162;
+      --trip-preparing: 255 167 38;
+      --trip-departed: 66 165 245;
+      --trip-fishing: 42 157 143;
+      --trip-returning: 255 167 38;
+      --trip-completed: 95 169 214;
+      --trip-cancelled: 239 83 80;
+
+      /* Tab bar */
+      --tab-bar-background: 22 33 43;
+      --tab-bar-border: 43 57 69;
+      --tab-bar-active: 95 169 214;
+      --tab-bar-inactive: 136 149 162;
+
+      --skeleton: 43 57 69;
+
       --grey1: 142 142 147;
       --grey2: 99 99 102;
       --grey3: 70 70 73;
@@ -91,33 +196,18 @@
       --grey5: 40 40 42;
       --grey6: 21 21 24;
 
-      --android-background: 0 0 0;
-      --android-foreground: 255 255 255;
-      --android-card: 16 19 27;
+      --android-background: 15 23 32;
+      --android-foreground: 244 247 250;
+      --android-card: 22 33 43;
       --android-card-foreground: 224 226 237;
-      --android-popover: 39 42 50;
-      --android-popover-foreground: 224 226 237;
-      --android-primary: 3 133 255;
-      --android-primary-foreground: 255 255 255;
-      --android-secondary: 28 60 114;
-      --android-secondary-foreground: 189 209 255;
-      --android-muted: 216 226 255;
-      --android-muted-foreground: 139 144 160;
-      --android-accent: 83 0 111;
-      --android-accent-foreground: 238 177 255;
-      --android-destructive: 147 0 10;
-      --android-destructive-foreground: 255 255 255;
-      --android-border: 39 42 50;
-      --android-input: 55 55 57;
-      --android-ring: 39 42 50;
-
-      /* Android dark grey scale */
-      --android-grey1: 224 226 237;
-      --android-grey2: 139 144 160;
-      --android-grey3: 54 57 66;
-      --android-grey4: 49 53 61;
-      --android-grey5: 39 42 50;
-      --android-grey6: 16 19 27;
+      --android-primary: 95 169 214;
+      --android-primary-foreground: 15 23 32;
+      --android-secondary: 42 157 143;
+      --android-destructive: 239 83 80;
+      --android-destructive-foreground: 15 23 32;
+      --android-border: 43 57 69;
+      --android-input: 43 57 69;
+      --android-ring: 43 57 69;
     }
   }
 }
